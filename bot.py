@@ -1,6 +1,11 @@
+# ============================================================
+# PART 1 - CONFIGURATION
+# ============================================================
+
 import asyncio
 import logging
 import os
+import random
 from pathlib import Path
 
 from aiohttp import web
@@ -13,8 +18,20 @@ from telegram.ext import (
     filters,
 )
 
+
 BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
-ADMIN_ID = int(os.getenv("ADMIN_ID", "8767998937"))
+
+ADMIN_ID = int(
+    os.getenv(
+        "ADMIN_ID",
+        "8767998937"
+    )
+)
+
+
+# ============================================================
+# MAIN 9 CHANNELS
+# ============================================================
 
 MAIN_CHANNELS = [
     -1003979162694,
@@ -28,114 +45,269 @@ MAIN_CHANNELS = [
     -1004471601516,
 ]
 
+
+# ============================================================
+# SEPARATE 10TH CHANNEL
+# ============================================================
+
 SEPARATE_CHANNEL = -1003542014061
 
-BASE_DIR = Path(__file__).resolve().parent
+
+# ============================================================
+# FILE PATHS
+# ============================================================
+
+BASE_DIR = Path(
+    __file__
+).resolve().parent
+
 PHOTO_DIR = BASE_DIR / "photos"
 
+
+# ============================================================
+# CHANNEL NAMES
+# ============================================================
+
 NAMES = [
-    "Aarav Sharma", "Aditya Verma", "Arjun Singh", "Rohit Kumar",
-    "Rahul Mehta", "Karan Malhotra", "Ankit Gupta", "Aman Yadav",
-    "Akash Mishra", "Vivek Tiwari", "Rohan Kapoor", "Varun Bansal",
-    "Mohit Agarwal", "Nikhil Jain", "Yash Patel", "Harsh Shah",
-    "Rajat Saini", "Manish Chauhan", "Abhishek Saxena",
-    "Saurabh Srivastava", "Sameer Khanna", "Ayush Pandey",
-    "Shivam Tripathi", "Piyush Joshi", "Kartik Deshmukh",
-    "Siddharth Rao", "Arnav Reddy", "Dhruv Nair", "Kabir Menon",
-    "Pranav Iyer", "Varad Kulkarni", "Akhil Shetty", "Rohit Naik",
-    "Devendra Thakur", "Naveen Rawat", "Deepak Bisht", "Sumit Negi",
-    "Gaurav Dahiya", "Vikas Hooda", "Manav Arora", "Tushar Wadhwa",
-    "Lakshya Oberoi", "Rishabh Chawla", "Tarun Goel", "Rajveer Ahuja",
-    "Kunal Sethi", "Neeraj Puri", "Ashish Bhardwaj", "Dev Sharma",
+    "Aarav Sharma",
+    "Aditya Verma",
+    "Arjun Singh",
+    "Rohit Kumar",
+    "Rahul Mehta",
+    "Karan Malhotra",
+    "Ankit Gupta",
+    "Aman Yadav",
+    "Akash Mishra",
+    "Vivek Tiwari",
+    "Rohan Kapoor",
+    "Varun Bansal",
+    "Mohit Agarwal",
+    "Nikhil Jain",
+    "Yash Patel",
+    "Harsh Shah",
+    "Rajat Saini",
+    "Manish Chauhan",
+    "Abhishek Saxena",
+    "Saurabh Srivastava",
+    "Sameer Khanna",
+    "Ayush Pandey",
+    "Shivam Tripathi",
+    "Piyush Joshi",
+    "Kartik Deshmukh",
+    "Siddharth Rao",
+    "Arnav Reddy",
+    "Dhruv Nair",
+    "Kabir Menon",
+    "Pranav Iyer",
+    "Varad Kulkarni",
+    "Akhil Shetty",
+    "Rohit Naik",
+    "Devendra Thakur",
+    "Naveen Rawat",
+    "Deepak Bisht",
+    "Sumit Negi",
+    "Gaurav Dahiya",
+    "Vikas Hooda",
+    "Manav Arora",
+    "Tushar Wadhwa",
+    "Lakshya Oberoi",
+    "Rishabh Chawla",
+    "Tarun Goel",
+    "Rajveer Ahuja",
+    "Kunal Sethi",
+    "Neeraj Puri",
+    "Ashish Bhardwaj",
+    "Dev Sharma",
     "Rudra Choudhary",
 ]
 
-CAPTIONS = [
-    "Thanku Hackii bhai",
-    "Hackii maja aa gaya bhai",
-    "Thanku bhai jackpot",
-    "Great ho bhai Hackii",
-    "Win hogya bhai",
-    "Hackii bhai kamaal kar diya",
-    "Bhai maja aa gaya",
-    "Thanku Hackii bhai",
-    "Bhai ek number kaam hai",
-    "Hackii bhai zabardast",
-    "Great work bhai",
-    "Bhai bahut sahi laga",
-    "Thanku bhai",
-    "Hackii bhai mast hai",
-    "Bhai kya baat hai",
-    "Maja aa gaya Hackii",
-    "Thanku so much bhai",
-    "Hackii bhai great ho",
-    "Bhai kamaal kar diya",
-    "Aaj to maja aa gaya",
-    "Thanku Hackii",
-    "Bhai bahut badhiya",
-    "Hackii bhai full mast",
-    "Great bhai kaam kar gaya",
-    "Bhai result mast raha",
-    "Thanku bhai Hackii",
-    "Hackii bhai ekdum sahi",
-    "Maja aa gaya bhai",
-    "Bhai kya hi bataun",
-    "Great ho Hackii bhai",
-    "Thanku bhai bahut sahi",
-    "Hackii bhai mast kaam",
-    "Bhai aaj to kamaal ho gaya",
-    "Thanku Hackii bhai",
-    "Hackii bhai bahut badhiya",
-    "Bhai full maja aa gaya",
-    "Great work Hackii bhai",
-    "Thanku bhai mast laga",
-    "Hackii bhai zabardast kaam",
-    "Bhai maja aa gaya",
+
+# ============================================================
+# RANDOM NEUTRAL POST CAPTIONS
+# ============================================================
+
+NEUTRAL_CAPTIONS = [
+    "Win bhai",
+"Love you Hackii bhai",
+"Ho gaya bhai",
+"Thanku yaar",
+"Bhai kya baat hai",
+"Sahi ho gaya bhai, thanku",
+"Hackii bhai love you yaar",
+"Win ho gaya bhai, maja aa gaya",
+"Arey bhai, aaj to scene ban gaya",
+"Thanku Hackii bhai",
+"Bhai ho gaya, kya bolun ab",
+"Love you bhai, dil se thanku",
+"Win bhai, aaj to maza aa gaya",
+"Hackii bhai, jo bola tha samajh aa gaya",
+"Arre yaar bhai, aaj wali baat dekh ke sach mein khushi ho gayi",
+"Thanku bhai, itna clearly batane ke liye",
+"Bhai ye wala to sahi ho gaya",
+"Win bhai, kya scene hai",
+"Hackii bhai love you, aaj to maja aa gaya",
+"Arre wah bhai, aaj ka update dekh ke kaafi accha laga",
+"Thanku yaar, ab sab clear hai",
+"Bhai ho gaya, thanku Hackii",
+"Love you bhai, kya baat hai",
+"Win bhai, ekdum sahi",
+"Hackii bhai, aaj to kamaal ho gaya",
+"Thanku bhai, pehle confusion tha ab samajh aa gaya",
+"Arre bhai, ye dekh ke maja aa gaya",
+"Win ho gaya bhai, thanku yaar",
+"Hackii bhai love you, kya mast moment tha",
+"Bhai aaj wala kaafi sahi raha",
+"Thanku Hackii bhai, sach mein kaafi help mili",
+"Win bhai",
+"Love you yaar Hackii",
+"Ho gaya bhai, ab tension nahi",
+"Arre bhai, aaj to maza hi aa gaya",
+"Hackii bhai, thanku itna simple karke samjhane ke liye",
+"Bhai win ho gaya, kya bolu yaar",
+"Love you bhai, aaj kaafi khushi hui",
+"Thanku yaar, Hackii bhai ne aaj phir samjha diya",
+"Win bhai, aaj ka din ban gaya",
 ]
+
+
+# ============================================================
+# RUNTIME STATE
+# ============================================================
 
 state = {
     "name_offset": 0,
     "photo_offset": 0,
-    "caption_offset": 0,
     "latest_posts": {},
     "pending_post": None,
     "media_groups": {},
+    "caption_history": [],
 }
+
+
+# ============================================================
+# LOGGING
+# ============================================================
 
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(message)s",
+    format=(
+        "%(asctime)s | "
+        "%(levelname)s | "
+        "%(message)s"
+    ),
 )
 
-log = logging.getLogger("channel-bot")
+log = logging.getLogger(
+    "channel-bot"
+)
 
 
-def is_admin(update: Update) -> bool:
+# ============================================================
+# ADMIN CHECK
+# ============================================================
+
+def is_admin(
+    update: Update
+) -> bool:
+
     return bool(
         update.effective_user
-        and update.effective_user.id == ADMIN_ID
+        and update.effective_user.id
+        == ADMIN_ID
     )
 
 
-async def admin_only(update: Update) -> bool:
+async def admin_only(
+    update: Update
+) -> bool:
+
     if not is_admin(update):
+
         if update.effective_message:
+
             await update.effective_message.reply_text(
                 "Unauthorized."
             )
+
         return False
 
     return True
 
 
-def photo_for_index(index: int) -> Path:
-    return PHOTO_DIR / f"{(index % 40) + 1:02d}.jpg"
+# ============================================================
+# PHOTO FILE SELECTOR
+# ============================================================
 
+def photo_for_index(
+    index: int
+) -> Path:
+
+    return (
+        PHOTO_DIR
+        / f"{(index % 40) + 1:02d}.jpg"
+    )
+
+
+# ============================================================
+# RANDOM CAPTION SELECTOR
+# ============================================================
+
+def pick_random_captions(
+    count: int
+):
+
+    recent = (
+        state["caption_history"][-10:]
+    )
+
+    pool = [
+        caption
+        for caption in NEUTRAL_CAPTIONS
+        if caption not in recent
+    ]
+
+    if len(pool) < count:
+
+        pool = NEUTRAL_CAPTIONS[:]
+
+    chosen = random.sample(
+        pool,
+        min(
+            count,
+            len(pool)
+        ),
+    )
+
+    while len(chosen) < count:
+
+        chosen.append(
+            random.choice(
+                NEUTRAL_CAPTIONS
+            )
+        )
+
+    state[
+        "caption_history"
+    ].extend(chosen)
+
+    state[
+        "caption_history"
+    ] = state[
+        "caption_history"
+    ][-20:]
+
+    return chosen
+
+
+# ============================================================
+# START COMMAND
+# ============================================================
 
 async def cmd_start(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
+
     if not await admin_only(update):
         return
 
@@ -144,94 +316,134 @@ async def cmd_start(
         "/photo - 9 main channel photos change\n"
         "/removephoto - 9 main channel photos remove\n"
         "/allchanelforward - saved photo/album/text post\n"
-        "/Allchanelto1chanelforward - latest bot posts to separate channel\n"
+        "/Allchanelto1chanelforward - latest posts to separate channel\n"
         "/status - bot status"
     )
 
+
+# ============================================================
+# NAME CHANGE
+# ============================================================
 
 async def cmd_namechange(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
+
     if not await admin_only(update):
         return
 
-    start = state["name_offset"]
-
-    names = [
-        NAMES[(start + i) % len(NAMES)]
-        for i in range(len(MAIN_CHANNELS))
+    start = state[
+        "name_offset"
     ]
 
-    semaphore = asyncio.Semaphore(3)
+    names = [
+        NAMES[
+            (start + i)
+            % len(NAMES)
+        ]
+        for i in range(
+            len(MAIN_CHANNELS)
+        )
+    ]
 
-    async def worker(channel_id, title):
+    semaphore = asyncio.Semaphore(
+        3
+    )
+
+    async def worker(
+        channel_id,
+        title,
+    ):
+
         async with semaphore:
+
             try:
+
                 await context.bot.set_chat_title(
                     chat_id=channel_id,
                     title=title,
                 )
+
                 return True, None
+
             except Exception as exc:
+
                 log.exception(
                     "Name change failed: %s",
                     channel_id,
                 )
-                return False, f"{channel_id}: {exc}"
+
+                return (
+                    False,
+                    f"{channel_id}: {exc}",
+                )
 
     results = await asyncio.gather(
         *(
-            worker(channel_id, title)
+            worker(
+                channel_id,
+                title,
+            )
             for channel_id, title
-            in zip(MAIN_CHANNELS, names)
+            in zip(
+                MAIN_CHANNELS,
+                names,
+            )
         )
     )
 
-    state["name_offset"] = (
-        start + len(MAIN_CHANNELS)
+    state[
+        "name_offset"
+    ] = (
+        start
+        + len(MAIN_CHANNELS)
     ) % len(NAMES)
 
     success = sum(
-        ok for ok, _ in results
+        ok
+        for ok, _ in results
     )
 
     errors = [
-        error for _, error in results
+        error
+        for _, error in results
         if error
     ]
 
     reply = (
         f"Namechange complete: "
-        f"{success}/{len(MAIN_CHANNELS)}"
+        f"{success}/"
+        f"{len(MAIN_CHANNELS)}"
     )
 
     if errors:
+
         reply += (
             "\nErrors:\n"
-            + "\n".join(errors[:3])
+            + "\n".join(
+                errors[:3]
+            )
         )
 
-    await update.effective_message.reply_text(reply)
+    await update.effective_message.reply_text(
+        reply
+    )
 
 
-# =========================
+# ============================================================
 # PART 1 END
-# =========================
 # ============================================================
-# PHOTO CHANGE
 # ============================================================
+# PART 2 - PHOTO / TEXT HANDLERS
+# ============================================================
+
 
 async def change_photo(
     context: ContextTypes.DEFAULT_TYPE,
     channel_id: int,
     photo_path: Path,
 ):
-    """
-    Local image ko bytes ke roop mein InputFile bana kar
-    channel profile photo set karta hai.
-    """
-
     try:
         if not photo_path.is_file():
             raise FileNotFoundError(
@@ -260,7 +472,6 @@ async def change_photo(
             "Photo change failed: %s",
             channel_id,
         )
-
         return False, f"{channel_id}: {exc}"
 
 
@@ -275,17 +486,25 @@ async def cmd_photo(
 
     semaphore = asyncio.Semaphore(3)
 
-    async def worker(index, channel_id):
+    async def worker(
+        index,
+        channel_id,
+    ):
         async with semaphore:
             return await change_photo(
                 context,
                 channel_id,
-                photo_for_index(start + index),
+                photo_for_index(
+                    start + index
+                ),
             )
 
     results = await asyncio.gather(
         *(
-            worker(index, channel_id)
+            worker(
+                index,
+                channel_id,
+            )
             for index, channel_id
             in enumerate(MAIN_CHANNELS)
         )
@@ -296,23 +515,28 @@ async def cmd_photo(
     ) % 40
 
     success = sum(
-        ok for ok, _ in results
+        ok
+        for ok, _ in results
     )
 
     errors = [
-        error for _, error in results
+        error
+        for _, error in results
         if error
     ]
 
     reply = (
         f"Photo change complete: "
-        f"{success}/{len(MAIN_CHANNELS)}"
+        f"{success}/"
+        f"{len(MAIN_CHANNELS)}"
     )
 
     if errors:
         reply += (
             "\nErrors:\n"
-            + "\n".join(errors[:3])
+            + "\n".join(
+                errors[:3]
+            )
         )
 
     await update.effective_message.reply_text(
@@ -320,19 +544,10 @@ async def cmd_photo(
     )
 
 
-# ============================================================
-# REMOVE PHOTO
-# ============================================================
-
 async def cmd_removephoto(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ):
-    """
-    Sirf 9 main channels ki profile photo remove karega.
-    Separate channel ko touch nahi karega.
-    """
-
     if not await admin_only(update):
         return
 
@@ -353,33 +568,42 @@ async def cmd_removephoto(
                     channel_id,
                 )
 
-                return False, f"{channel_id}: {exc}"
+                return (
+                    False,
+                    f"{channel_id}: {exc}",
+                )
 
     results = await asyncio.gather(
         *(
             worker(channel_id)
-            for channel_id in MAIN_CHANNELS
+            for channel_id
+            in MAIN_CHANNELS
         )
     )
 
     success = sum(
-        ok for ok, _ in results
+        ok
+        for ok, _ in results
     )
 
     errors = [
-        error for _, error in results
+        error
+        for _, error in results
         if error
     ]
 
     reply = (
         f"Removephoto complete: "
-        f"{success}/{len(MAIN_CHANNELS)}"
+        f"{success}/"
+        f"{len(MAIN_CHANNELS)}"
     )
 
     if errors:
         reply += (
             "\nErrors:\n"
-            + "\n".join(errors[:3])
+            + "\n".join(
+                errors[:3]
+            )
         )
 
     await update.effective_message.reply_text(
@@ -388,7 +612,7 @@ async def cmd_removephoto(
 
 
 # ============================================================
-# RECEIVE SINGLE PHOTO / ALBUM PHOTO
+# RECEIVE SINGLE PHOTO / ALBUM
 # ============================================================
 
 async def receive_photo(
@@ -403,19 +627,23 @@ async def receive_photo(
     if not message or not message.photo:
         return
 
-    photo_item = (
-        message.photo[-1].file_id,
-        message.caption or "",
-    )
+    photo_id = message.photo[-1].file_id
+    user_caption = message.caption or ""
+    group_id = message.media_group_id
 
-    media_group_id = message.media_group_id
+    # --------------------------------------------------------
+    # SINGLE PHOTO
+    # --------------------------------------------------------
 
-    # Normal single photo
-    if not media_group_id:
-
+    if not group_id:
         state["pending_post"] = {
             "type": "photos",
-            "items": [photo_item],
+            "items": [
+                (
+                    photo_id,
+                    user_caption,
+                )
+            ],
         }
 
         await message.reply_text(
@@ -425,9 +653,14 @@ async def receive_photo(
 
         return
 
-    # Telegram album / multiple photos
-    bucket = state["media_groups"].setdefault(
-        media_group_id,
+    # --------------------------------------------------------
+    # TELEGRAM ALBUM
+    # --------------------------------------------------------
+
+    bucket = state[
+        "media_groups"
+    ].setdefault(
+        group_id,
         {
             "items": [],
             "task": None,
@@ -435,24 +668,36 @@ async def receive_photo(
     )
 
     bucket["items"].append(
-        photo_item
+        (
+            photo_id,
+            user_caption,
+        )
     )
 
-    # Telegram album ke next item ka wait.
-    old_task = bucket.get("task")
+    old_task = bucket.get(
+        "task"
+    )
 
-    if old_task and not old_task.done():
+    if (
+        old_task
+        and not old_task.done()
+    ):
         old_task.cancel()
 
     async def finalize_album():
+
         try:
-            await asyncio.sleep(1.0)
+            await asyncio.sleep(
+                1.2
+            )
 
         except asyncio.CancelledError:
             return
 
-        data = state["media_groups"].pop(
-            media_group_id,
+        data = state[
+            "media_groups"
+        ].pop(
+            group_id,
             None,
         )
 
@@ -465,7 +710,8 @@ async def receive_photo(
         }
 
         await message.reply_text(
-            f"{len(data['items'])} photos saved.\n"
+            f"{len(data['items'])} "
+            "photos saved.\n"
             "Ab /allchanelforward bhejo."
         )
 
@@ -504,29 +750,44 @@ async def receive_text(
 
 
 # ============================================================
-# CAPTION SEQUENCE
+# CLEAN CONTROL COMMAND FROM USER CAPTION
 # ============================================================
 
-def reserve_captions(count: int):
-    """
-    Saare 40 captions ko sequence mein use karta hai.
-    Har command par caption 1 se reset nahi hota.
-    """
+def clean_user_caption(
+    text: str
+) -> str:
 
-    start = state["caption_offset"]
+    if not text:
+        return ""
 
-    captions = [
-        CAPTIONS[
-            (start + i) % len(CAPTIONS)
-        ]
-        for i in range(count)
-    ]
+    cleaned_lines = []
 
-    state["caption_offset"] = (
-        start + count
-    ) % len(CAPTIONS)
+    for line in text.splitlines():
 
-    return captions
+        stripped = line.strip()
+
+        if stripped.lower().startswith(
+            "/allchanelforward"
+        ):
+
+            remaining = stripped[
+                len("/allchanelforward"):
+            ].strip()
+
+            if remaining:
+                cleaned_lines.append(
+                    remaining
+                )
+
+            continue
+
+        cleaned_lines.append(
+            line
+        )
+
+    return "\n".join(
+        cleaned_lines
+    ).strip()
 
 
 # ============================================================
@@ -538,18 +799,25 @@ async def send_photo(
     channel_id,
     photo_id,
     user_caption,
-    project_caption,
+    publication_caption,
 ):
+    user_caption = clean_user_caption(
+        user_caption
+    )
+
     if user_caption:
         final_caption = (
             f"{user_caption}\n\n"
-            f"{project_caption}"
+            f"{publication_caption}"
         )
     else:
-        final_caption = project_caption
+        final_caption = (
+            publication_caption
+        )
 
     try:
-        message = await context.bot.send_photo(
+
+        sent = await context.bot.send_photo(
             chat_id=channel_id,
             photo=photo_id,
             caption=final_caption,
@@ -557,13 +825,14 @@ async def send_photo(
 
         return (
             channel_id,
-            message.message_id,
+            sent.message_id,
             None,
         )
 
     except Exception as exc:
+
         log.exception(
-            "Photo post failed: %s",
+            "Photo send failed: %s",
             channel_id,
         )
 
@@ -582,28 +851,39 @@ async def send_text(
     context,
     channel_id,
     text,
-    project_caption,
+    publication_caption,
 ):
-    final_text = (
-        f"{text}\n\n"
-        f"{project_caption}"
+    text = clean_user_caption(
+        text
     )
 
+    if text:
+        final_text = (
+            f"{text}\n\n"
+            f"{publication_caption}"
+        )
+    else:
+        final_text = (
+            publication_caption
+        )
+
     try:
-        message = await context.bot.send_message(
+
+        sent = await context.bot.send_message(
             chat_id=channel_id,
             text=final_text,
         )
 
         return (
             channel_id,
-            message.message_id,
+            sent.message_id,
             None,
         )
 
     except Exception as exc:
+
         log.exception(
-            "Text post failed: %s",
+            "Text send failed: %s",
             channel_id,
         )
 
@@ -618,8 +898,9 @@ async def send_text(
 # PART 2 END
 # ============================================================
 # ============================================================
-# ALL CHANNEL FORWARD
+# PART 3 - ALL CHANNEL FORWARD
 # ============================================================
+
 
 async def cmd_allchanelforward(
     update: Update,
@@ -628,7 +909,9 @@ async def cmd_allchanelforward(
     if not await admin_only(update):
         return
 
-    pending = state.get("pending_post")
+    pending = state.get(
+        "pending_post"
+    )
 
     if not pending:
         await update.effective_message.reply_text(
@@ -638,21 +921,7 @@ async def cmd_allchanelforward(
         return
 
     # --------------------------------------------------------
-    # CONTENT DISTRIBUTION
-    # --------------------------------------------------------
-    #
-    # 1 photo:
-    #   Same photo -> all 9 channels
-    #
-    # 3 photos:
-    #   Channel 1 -> photo 1
-    #   Channel 2 -> photo 2
-    #   Channel 3 -> photo 3
-    #   Channel 4 -> photo 1
-    #   ... sequence repeat
-    #
-    # Normal text:
-    #   Same text -> all 9 channels
+    # PHOTO / ALBUM DISTRIBUTION
     # --------------------------------------------------------
 
     if pending["type"] == "photos":
@@ -676,13 +945,10 @@ async def cmd_allchanelforward(
         ]
 
     # --------------------------------------------------------
-    # 9 channels = 9 different captions
-    #
-    # Caption sequence global hai.
-    # Har command par caption 1 se reset nahi hoga.
+    # RANDOM CAPTIONS
     # --------------------------------------------------------
 
-    captions = reserve_captions(
+    captions = pick_random_captions(
         len(MAIN_CHANNELS)
     )
 
@@ -692,6 +958,7 @@ async def cmd_allchanelforward(
         index,
         channel_id,
     ):
+
         async with semaphore:
 
             if pending["type"] == "photos":
@@ -715,20 +982,27 @@ async def cmd_allchanelforward(
                 captions[index],
             )
 
+    # --------------------------------------------------------
+    # SEND TO ALL 9 MAIN CHANNELS
+    # --------------------------------------------------------
+
     results = await asyncio.gather(
         *(
-            worker(index, channel_id)
+            worker(
+                index,
+                channel_id,
+            )
             for index, channel_id
             in enumerate(MAIN_CHANNELS)
         )
     )
 
-    # --------------------------------------------------------
-    # SAVE LATEST BOT POST OF EACH CHANNEL
-    # --------------------------------------------------------
-
     success = 0
     errors = []
+
+    # --------------------------------------------------------
+    # SAVE LATEST MESSAGE ID
+    # --------------------------------------------------------
 
     for (
         channel_id,
@@ -740,9 +1014,9 @@ async def cmd_allchanelforward(
 
             success += 1
 
-            state["latest_posts"][
-                channel_id
-            ] = message_id
+            state[
+                "latest_posts"
+            ][channel_id] = message_id
 
         elif error:
 
@@ -750,16 +1024,18 @@ async def cmd_allchanelforward(
                 f"{channel_id}: {error}"
             )
 
-    # Content consumed.
+    # Content successfully processed.
     state["pending_post"] = None
 
     reply = (
         f"Posted to "
-        f"{success}/{len(MAIN_CHANNELS)} "
-        f"main channels."
+        f"{success}/"
+        f"{len(MAIN_CHANNELS)} "
+        "main channels."
     )
 
     if errors:
+
         reply += (
             "\nErrors: "
             f"{len(errors)}"
@@ -771,8 +1047,9 @@ async def cmd_allchanelforward(
 
 
 # ============================================================
-# FORWARD LATEST BOT POSTS TO SEPARATE CHANNEL
+# FORWARD LATEST POSTS TO SEPARATE CHANNEL
 # ============================================================
+
 
 async def cmd_forward_latest(
     update: Update,
@@ -781,18 +1058,17 @@ async def cmd_forward_latest(
     if not await admin_only(update):
         return
 
-    # --------------------------------------------------------
-    # Separate channel sirf yahan use hota hai.
-    # Name/photo commands is channel ko touch nahi karte.
-    # --------------------------------------------------------
-
     semaphore = asyncio.Semaphore(3)
 
-    async def worker(channel_id):
+    async def worker(
+        channel_id
+    ):
 
         message_id = state[
             "latest_posts"
-        ].get(channel_id)
+        ].get(
+            channel_id
+        )
 
         if not message_id:
 
@@ -832,7 +1108,8 @@ async def cmd_forward_latest(
     results = await asyncio.gather(
         *(
             worker(channel_id)
-            for channel_id in MAIN_CHANNELS
+            for channel_id
+            in MAIN_CHANNELS
         )
     )
 
@@ -843,20 +1120,25 @@ async def cmd_forward_latest(
 
     errors = [
         error
-        for _, error in results
+        for _, error
+        in results
         if error
     ]
 
     reply = (
         f"Forwarded "
-        f"{success}/{len(MAIN_CHANNELS)} "
+        f"{success}/"
+        f"{len(MAIN_CHANNELS)} "
         "latest bot posts to separate channel."
     )
 
     if errors:
+
         reply += (
             "\nErrors:\n"
-            + "\n".join(errors[:5])
+            + "\n".join(
+                errors[:5]
+            )
         )
 
     await update.effective_message.reply_text(
@@ -868,6 +1150,7 @@ async def cmd_forward_latest(
 # STATUS
 # ============================================================
 
+
 async def cmd_status(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
@@ -876,8 +1159,11 @@ async def cmd_status(
         return
 
     tracked = sum(
-        channel_id in state["latest_posts"]
-        for channel_id in MAIN_CHANNELS
+        channel_id in state[
+            "latest_posts"
+        ]
+        for channel_id
+        in MAIN_CHANNELS
     )
 
     pending = (
@@ -889,15 +1175,13 @@ async def cmd_status(
     await update.effective_message.reply_text(
         f"Main channels: "
         f"{len(MAIN_CHANNELS)}\n"
-        f"Separate channel: 1\n"
+        "Separate channel: 1\n"
         f"Latest bot posts tracked: "
         f"{tracked}/9\n"
         f"Next name index: "
         f"{state['name_offset'] + 1}\n"
         f"Next photo index: "
         f"{state['photo_offset'] + 1}\n"
-        f"Next caption index: "
-        f"{state['caption_offset'] + 1}\n"
         f"Pending post: {pending}"
     )
 
@@ -906,8 +1190,9 @@ async def cmd_status(
 # RENDER HEALTH SERVER
 # ============================================================
 
+
 async def health(
-    request,
+    request
 ):
     return web.Response(
         text="OK"
@@ -919,7 +1204,7 @@ async def run_health_server():
     port = int(
         os.getenv(
             "PORT",
-            "10000",
+            "10000"
         )
     )
 
@@ -927,12 +1212,12 @@ async def run_health_server():
 
     app.router.add_get(
         "/",
-        health,
+        health
     )
 
     app.router.add_get(
         "/health",
-        health,
+        health
     )
 
     runner = web.AppRunner(
@@ -944,17 +1229,16 @@ async def run_health_server():
     site = web.TCPSite(
         runner,
         "0.0.0.0",
-        port,
+        port
     )
 
     await site.start()
 
     log.info(
         "Health server listening on %s",
-        port,
+        port
     )
 
-    # Render service ko alive rakho.
     await asyncio.Event().wait()
 
 
@@ -962,10 +1246,12 @@ async def run_health_server():
 # TELEGRAM ERROR HANDLER
 # ============================================================
 
+
 async def error_handler(
     update,
-    context,
+    context
 ):
+
     log.error(
         "Telegram update error: %s",
         context.error,
@@ -977,8 +1263,9 @@ async def error_handler(
 # PART 3 END
 # ============================================================
 # ============================================================
-# APPLICATION START
+# PART 4 - START BOT
 # ============================================================
+
 
 async def main():
 
@@ -999,9 +1286,9 @@ async def main():
         .build()
     )
 
-    # ========================================================
+    # --------------------------------------------------------
     # COMMAND HANDLERS
-    # ========================================================
+    # --------------------------------------------------------
 
     application.add_handler(
         CommandHandler(
@@ -1052,9 +1339,9 @@ async def main():
         )
     )
 
-    # ========================================================
-    # PHOTO / ALBUM RECEIVER
-    # ========================================================
+    # --------------------------------------------------------
+    # PHOTO / ALBUM HANDLER
+    # --------------------------------------------------------
 
     application.add_handler(
         MessageHandler(
@@ -1063,28 +1350,29 @@ async def main():
         )
     )
 
-    # ========================================================
-    # NORMAL TEXT RECEIVER
-    # ========================================================
+    # --------------------------------------------------------
+    # NORMAL TEXT HANDLER
+    # --------------------------------------------------------
 
     application.add_handler(
         MessageHandler(
-            filters.TEXT & ~filters.COMMAND,
+            filters.TEXT
+            & ~filters.COMMAND,
             receive_text,
         )
     )
 
-    # ========================================================
+    # --------------------------------------------------------
     # ERROR HANDLER
-    # ========================================================
+    # --------------------------------------------------------
 
     application.add_error_handler(
         error_handler
     )
 
-    # ========================================================
-    # START TELEGRAM BOT
-    # ========================================================
+    # --------------------------------------------------------
+    # START TELEGRAM
+    # --------------------------------------------------------
 
     await application.initialize()
 
@@ -1099,9 +1387,9 @@ async def main():
         "Telegram channel bot started successfully."
     )
 
-    # ========================================================
+    # --------------------------------------------------------
     # RENDER HEALTH SERVER
-    # ========================================================
+    # --------------------------------------------------------
 
     try:
 
@@ -1117,9 +1405,16 @@ async def main():
 
 
 # ============================================================
-# RUN BOT
+# RUN
 # ============================================================
 
 if __name__ == "__main__":
 
-    asyncio.run(main())
+    asyncio.run(
+        main()
+    )
+
+
+# ============================================================
+# PART 4 END
+# ============================================================
